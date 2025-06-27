@@ -1,14 +1,17 @@
 #!/bin/bash
 
 # Configuration for the reminder
-NOTIFICATION_INTERVAL_SECONDS=$((30 * 1)) # 1 hour in seconds
+# Read interval from environment variable, default to 3600 seconds (1 hour)
+NOTIFICATION_INTERVAL_SECONDS="${REMINDER_DURATION_SECONDS:-3600}"
+
 NOTIFICATION_TITLE="💧 Hydration Reminder!"
 NOTIFICATION_MESSAGE="You've been active for a while. Remember to drink some water!"
-# Changed icon to 'info' which is more universally available or often built-in to notification daemons.
-# Other options could be empty string "" (no icon) or 'dialog-warning' (if semantic fits).
-ICON="info" # A standard Freedesktop icon like 'info', or 'dialog-error', 'dialog-warning'.
+# ICON is now handled by the emoji in NOTIFICATION_TITLE, no need to pass -i to notify-send
+# If you prefer a themed icon, you can uncomment ICON and add -i "$ICON" back to notify-send,
+# but ensure the icon name is resolvable by dunst and its configured icon_theme.
+# ICON="dialog-information"
 
-echo "Starting water reminder. You will be reminded every hour."
+echo "Starting water reminder. You will be reminded every $((NOTIFICATION_INTERVAL_SECONDS / 60)) minutes."
 echo "---------------------------------------------------------"
 echo "NOTE: This script provides TIME-BASED reminders only."
 echo "Direct mouse/keyboard tracking from inside Docker to your host GUI is complex and not implemented here."
@@ -23,17 +26,18 @@ echo "---------------------------------------------------------"
 while true; do
     # Simplified echo statement, compatible with Alpine's 'date'
     echo "Waiting for $NOTIFICATION_INTERVAL_SECONDS seconds... (Current time: $(date +"%H:%M:%S"))"
-    sleep $NOTIFICATION_INTERVAL_SECONDS
+    sleep "$NOTIFICATION_INTERVAL_SECONDS" # Use quotes around variable for safety
 
     # Attempt to send a notification
     # Check if notify-send is available and DISPLAY environment variable is set
     if command -v notify-send &> /dev/null && [ -n "$DISPLAY" ]; then
-        notify-send -i "$ICON" "$NOTIFICATION_TITLE" "$NOTIFICATION_MESSAGE"
+        # Sending notification without an explicit icon file/name.
+        # The emoji in NOTIFICATION_TITLE will serve as the visual cue.
+        notify-send "$NOTIFICATION_TITLE" "$NOTIFICATION_MESSAGE"
         echo "Notification sent at $(date +"%H:%M:%S")"
     else
         echo "ERROR: Could not send notification at $(date +"%H:%M:%S")."
         echo "Possible reasons: 'notify-send' not found in container, or DISPLAY variable not set/accessible (X server connection issue)."
-        echo "Please ensure libnotify, bash, dbus, dbus-x11, dunst, and icon themes are installed in the container and DISPLAY is correctly mounted from your host."
+        echo "Please ensure libnotify, bash, dbus, dbus-x11, dunst, and font packages are installed in the container and DISPLAY is correctly mounted from your host."
     fi
 done
-

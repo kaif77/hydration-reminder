@@ -17,6 +17,7 @@ services:
     # Only use if you understand the risks and are on a trusted network.
     environment:
       - DISPLAY=${DISPLAY} # ${DISPLAY} will automatically pick up your your host's DISPLAY variable.
+      - REMINDER_DURATION_SECONDS=30 # Example: set to 30 seconds for testing, change to 3600 for 1 hour
 
     # Volume mounts connect directories/files from your host to the container.
     # This is critical for the container to interact with your host's X server.
