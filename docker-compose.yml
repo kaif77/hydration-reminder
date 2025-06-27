@@ -1,0 +1,39 @@
+# Specify the Docker Compose file format version.
+version: '3.8'
+
+# Define the services (containers) that make up your application.
+services:
+  water-reminder:
+    # Build the image from the Dockerfile in the current directory.
+    build: .
+    
+    # Assign a custom name to the container for easy identification.
+    container_name: water-reminder-app
+
+    # Environment variables to pass into the container.
+    # The DISPLAY variable is essential for X applications (like notify-send)
+    # to know which display server on the host to connect to.
+    # WARNING: Exposing DISPLAY like this has security implications!
+    # Only use if you understand the risks and are on a trusted network.
+    environment:
+      - DISPLAY=${DISPLAY} # ${DISPLAY} will automatically pick up your your host's DISPLAY variable.
+
+    # Volume mounts connect directories/files from your host to the container.
+    # This is critical for the container to interact with your host's X server.
+    volumes:
+      # Mount the X server's Unix socket directory. This allows the container
+      # to communicate with the host's graphical display server.
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      # (Optional but Recommended): Mount the script directly from the host.
+      # This allows you to edit `water_reminder.sh` on your host and have
+      # the changes reflected in the container without rebuilding the image.
+      # If you modify the script, you might need to restart the container:
+      # `docker compose restart water-reminder`
+      - ./water_reminder.sh:/app/water_reminder.sh
+      - ./dunstrc:/root/.config/dunst/dunstrc
+#      - ./dunstrc:/root/.config//dunst/dunstrc
+      
+
+    # Restart policy for the container.
+    # 'unless-stopped': Always restart the container unless it is explicitly stopped (e.g., via `docker compose stop`).
+    restart: unless-stopped

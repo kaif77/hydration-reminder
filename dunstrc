@@ -1,0 +1,39 @@
+[global]
+    # Notification background color (e.g., a shade of blue for water reminder)
+    background = "#2E86C1"
+    # Notification foreground (text) color
+    foreground = "#FFFFFF"
+
+    # Font and size
+    # 'DejaVu Sans Mono' is provided by the 'ttf-dejavu' package installed in your Dockerfile.
+    # Adjust the number (e.g., 14, 16) to change the font size.
+    font = "DejaVu Sans Mono 12, Noto Color Emoji 12"
+
+    # IMPORTANT: Icon Theme Configuration
+    # Set the icon theme to 'Adwaita' (provided by adwaita-icon-theme package)
+    icon_theme = hicolor
+    # Enable recursive icon lookup within the theme's directories
+    enable_recursive_icon_lookup = true
+    
+    # Optional: If 'icon_theme' alone doesn't work, you can also keep explicit paths,
+    # but 'icon_theme' is the preferred way for dunst to find icons.
+    #icon_path = /usr/share/icons/Adwaita/16x16/actions/:/usr/share/icons/Adwaita/22x22/actions/:/usr/share/icons/Adwaita/24x24/actions/:/usr/share/icons/Adwaita/32x32/actions/:/usr/share/icons/Adwaita/48x48/actions/:/usr/share/icons/Adwaita/64x64/actions/:/usr/share/icons/Adwaita/128x128/actions/:/usr/share/icons/hicolor/16x16/actions/:/usr/share/icons/hicolor/22x22/actions/:/usr/share/icons/hicolor/24x24/actions/:/usr/share/icons/hicolor/32x32/actions/:/usr/share/icons/hicolor/48x48/actions/:/usr/share/icons/hicolor/64x64/actions/:/usr/share/icons/hicolor/128x128/actions/
+    
+    # Corner radius for notification windows (in pixels)
+    corner_radius = 8
+    # Frame width around the notification
+    frame_width = 1
+    # Frame color
+    frame_color = "#1A5276"
+    # Padding around the text
+    padding = 8
+    horizontal_padding = 10
+    # Timeout in seconds (how long the notification stays on screen)
+    timeout = 5
+
+    # Align text (left, center, right)
+    alignment = "left"
+
+    # Set transparency (0 is opaque, 100 is fully transparent)
+    transparency = 0
+
