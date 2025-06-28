@@ -8,10 +8,10 @@ NOTIFICATION_TITLE="💧 Hydration Reminder!"
 NOTIFICATION_MESSAGE="You've been active for a while. Remember to drink some water!"
 
 # Active hours and days configuration
-ACTIVE_HOURS_START=${ACTIVE_HOURS_START:-9}     # 9 AM
-ACTIVE_HOURS_END=${ACTIVE_HOURS_END:-18}       # 6 PM
-ACTIVE_DAYS=${ACTIVE_DAYS:-"1-5"}              # Monday-Friday (1=Mon,7=Sun)
-CHECK_INTERVAL=${CHECK_INTERVAL:-300}  
+ACTIVE_HOURS_START="${ACTIVE_HOURS_START:-9}"     # 9 AM
+ACTIVE_HOURS_END="${ACTIVE_HOURS_END:-18}"       # 6 PM
+ACTIVE_DAYS="${ACTIVE_DAYS:-"1-5"}"              # Monday-Friday (1=Mon,7=Sun)
+CHECK_INTERVAL="${CHECK_INTERVAL:-300}"  
 
 # ICON is now handled by the emoji in NOTIFICATION_TITLE, no need to pass -i to notify-send
 # If you prefer a themed icon, you can uncomment ICON and add -i "$ICON" back to notify-send,
@@ -34,8 +34,13 @@ is_active_time() {
     current_day=$(date +%u)  # 1-7 (Mon-Sun)
     
     # Check if current day is in active days
-    if [[ "$ACTIVE_DAYS" != *"$current_day"* ]]; then
-        return 1
+    if [[ "$ACTIVE_DAYS" == *"-"* ]]; then
+        # Handle range like "1-7"
+        start_day=${ACTIVE_DAYS%-*}
+        end_day=${ACTIVE_DAYS#*-}
+        if [[ $current_day < $start_day || $current_day > $end_day ]]; then
+            return 1
+        fi
     fi
     
     # Check if current hour is in active window
