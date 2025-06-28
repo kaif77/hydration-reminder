@@ -29,7 +29,7 @@
     padding = 8
     horizontal_padding = 10
     # Timeout in seconds (how long the notification stays on screen)
-    timeout = 5
+    timeout = 8
 
     # Align text (left, center, right)
     alignment = "left"
