@@ -8,7 +8,7 @@ services:
     build: .
     
     # Assign a custom name to the container for easy identification.
-    container_name: water-reminder-app
+    container_name: hydration_reminder
 
     # Environment variables to pass into the container.
     # The DISPLAY variable is essential for X applications (like notify-send)
