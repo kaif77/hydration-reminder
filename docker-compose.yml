@@ -18,6 +18,11 @@ services:
     environment:
       - DISPLAY=${DISPLAY} # ${DISPLAY} will automatically pick up your your host's DISPLAY variable.
       - REMINDER_DURATION_SECONDS=30 # Example: set to 30 seconds for testing, change to 3600 for 1 hour
+      - ACTIVE_HOURS_START=9 # Start of active hours (9 AM)
+      - ACTIVE_HOURS_END=18 # End of active hours (6 PM)
+      - ACTIVE_DAYS="1-6" # Active days (Monday to Friday)
+      - CHECK_INTERVAL=300 # Check every 5 minutes
+      - TZ=Asia/Colombo
 
     # Volume mounts connect directories/files from your host to the container.
     # This is critical for the container to interact with your host's X server.
@@ -32,7 +37,6 @@ services:
       # `docker compose restart water-reminder`
       - ./water_reminder.sh:/app/water_reminder.sh
       - ./dunstrc:/root/.config/dunst/dunstrc
-#      - ./dunstrc:/root/.config//dunst/dunstrc
       
 
     # Restart policy for the container.

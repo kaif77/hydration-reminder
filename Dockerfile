@@ -14,7 +14,7 @@ FROM alpine:latest
 # apk add --no-cache: Installs the specified packages and removes the package cache
 #                     after installation to further reduce image size.
 RUN apk update && \
-    apk add --no-cache libnotify bash dbus dbus-x11 dunst adwaita-icon-theme font-noto-emoji hicolor-icon-theme ttf-dejavu fontconfig && \
+    apk add --no-cache libnotify bash dbus dbus-x11 dunst adwaita-icon-theme font-noto-emoji hicolor-icon-theme ttf-dejavu fontconfig tzdata && \
     rm -rf /var/cache/apk/*
 
 # --- Fix for 'Cannot spawn a message bus without a machine-id' ---

@@ -6,6 +6,13 @@ NOTIFICATION_INTERVAL_SECONDS="${REMINDER_DURATION_SECONDS:-3600}"
 
 NOTIFICATION_TITLE="💧 Hydration Reminder!"
 NOTIFICATION_MESSAGE="You've been active for a while. Remember to drink some water!"
+
+# Active hours and days configuration
+ACTIVE_HOURS_START=${ACTIVE_HOURS_START:-9}     # 9 AM
+ACTIVE_HOURS_END=${ACTIVE_HOURS_END:-18}       # 6 PM
+ACTIVE_DAYS=${ACTIVE_DAYS:-"1-5"}              # Monday-Friday (1=Mon,7=Sun)
+CHECK_INTERVAL=${CHECK_INTERVAL:-300}  
+
 # ICON is now handled by the emoji in NOTIFICATION_TITLE, no need to pass -i to notify-send
 # If you prefer a themed icon, you can uncomment ICON and add -i "$ICON" back to notify-send,
 # but ensure the icon name is resolvable by dunst and its configured icon_theme.
@@ -22,8 +29,33 @@ echo "     (e.g., by running 'xhost +local:' in your host terminal BEFORE starti
 echo "     Be aware of the security implications of 'xhost +local:'."
 echo "---------------------------------------------------------"
 
+is_active_time() {
+    current_hour=$(date +%H)
+    current_day=$(date +%u)  # 1-7 (Mon-Sun)
+    
+    # Check if current day is in active days
+    if [[ "$ACTIVE_DAYS" != *"$current_day"* ]]; then
+        return 1
+    fi
+    
+    # Check if current hour is in active window
+    if [ "$current_hour" -lt "$ACTIVE_HOURS_START" ] || [ "$current_hour" -ge "$ACTIVE_HOURS_END" ]; then
+        return 1
+    fi
+    
+    return 0
+}
+
 # Loop indefinitely to send reminders
 while true; do
+
+    if is_active_time; then
+        echo "Active time detected at $(date +"%H:%M:%S")."
+    else
+        echo "Inactive time detected at $(date +"%H:%M:%S"). Skipping notification."
+        sleep "$NOTIFICATION_INTERVAL_SECONDS"
+        continue
+    fi
     # Simplified echo statement, compatible with Alpine's 'date'
     echo "Waiting for $NOTIFICATION_INTERVAL_SECONDS seconds... (Current time: $(date +"%H:%M:%S"))"
     sleep "$NOTIFICATION_INTERVAL_SECONDS" # Use quotes around variable for safety
